@@ -1,0 +1,5 @@
+pytest
+pytest-selenium
+urllib3
+pytest-base-url
+selenium
