@@ -1,9 +1,4 @@
 # -*- coding: utf-8 -*-
-from selenium.webdriver.firefox.webdriver import WebDriver
-from selenium.webdriver.common.action_chains import ActionChains
-from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support.ui import Select
 from selenium.common.exceptions import NoSuchElementException
 from selenium.common.exceptions import NoAlertPresentException
 import pytest
@@ -11,45 +6,35 @@ import pytest
 
 class TestAddGroup:
 
-    def setup(self):
-        self.wd = WebDriver()
-        self.wd.implicitly_wait(30)
+    def test_add_group(self, driver):
+        driver.get("http://localhost/addressbook/")
+        driver.find_element_by_name("user").send_keys("admin")
+        driver.find_element_by_name("pass").click()
+        driver.find_element_by_name("pass").send_keys("secret")
+        driver.find_element_by_xpath("//input[@value='Login']").click()
+        driver.find_element_by_link_text("groups").click()
+        driver.find_element_by_name("new").click()
+        driver.find_element_by_name("group_name").click()
+        driver.find_element_by_name("group_name").clear()
+        driver.find_element_by_name("group_name").send_keys("abd")
+        driver.find_element_by_name("group_header").click()
+        driver.find_element_by_name("group_header").clear()
+        driver.find_element_by_name("group_header").send_keys("abdc")
+        driver.find_element_by_name("group_footer").click()
+        driver.find_element_by_name("group_footer").clear()
+        driver.find_element_by_name("group_footer").send_keys("abdce")
+        driver.find_element_by_name("submit").click()
+        driver.find_element_by_link_text("groups").click()
+        driver.find_element_by_link_text("Logout").click()
 
-    def test_add_group(self):
-        wd = self.wd
-        wd.get("http://localhost/addressbook/")
-        wd.find_element_by_name("user").send_keys("admin")
-        wd.find_element_by_name("pass").click()
-        wd.find_element_by_name("pass").send_keys("secret")
-        wd.find_element_by_xpath("//input[@value='Login']").click()
-        wd.find_element_by_link_text("groups").click()
-        wd.find_element_by_name("new").click()
-        wd.find_element_by_name("group_name").click()
-        wd.find_element_by_name("group_name").clear()
-        wd.find_element_by_name("group_name").send_keys("abd")
-        wd.find_element_by_name("group_header").click()
-        wd.find_element_by_name("group_header").clear()
-        wd.find_element_by_name("group_header").send_keys("abdc")
-        wd.find_element_by_name("group_footer").click()
-        wd.find_element_by_name("group_footer").clear()
-        wd.find_element_by_name("group_footer").send_keys("abdce")
-        wd.find_element_by_name("submit").click()
-        wd.find_element_by_link_text("groups").click()
-        wd.find_element_by_link_text("Logout").click()
-
-    def is_element_present(self, how, what):
-        try: self.wd.find_element(by=how, value=what)
+    @staticmethod
+    def is_element_present(driver, how, what):
+        try: driver.find_element(by=how, value=what)
         except NoSuchElementException as e: return False
         return True
 
-    def is_alert_present(self):
-        try: self.wd.switch_to_alert()
+    @staticmethod
+    def is_alert_present(driver):
+        try: driver.switch_to_alert()
         except NoAlertPresentException as e: return False
         return True
-
-    def teardown(self):
-        self.wd.quit()
-
-
-if __name__ == "__main__":
-    pytest.main()
