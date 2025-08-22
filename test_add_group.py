@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-from selenium.common.exceptions import NoSuchElementException
-from selenium.common.exceptions import NoAlertPresentException
+from group import Group
 
 
 class TestAddGroup:
@@ -9,7 +8,7 @@ class TestAddGroup:
         self.open_home_page(driver)
         self.login(driver, username="admin", password="secret")
         self.open_groups_page(driver)
-        self.create_group(driver, name="abd", header="abdc", footer="abdce")
+        self.create_group(driver, Group(name="abd", header="abdc", footer="abdce"))
         self.return_to_groups_page(driver)
         self.logout(driver)
 
@@ -17,7 +16,7 @@ class TestAddGroup:
         self.open_home_page(driver)
         self.login(driver, username="admin", password="secret")
         self.open_groups_page(driver)
-        self.create_group(driver, name="", header="", footer="")
+        self.create_group(driver, Group(name="", header="", footer=""))
         self.return_to_groups_page(driver)
         self.logout(driver)
 
@@ -27,19 +26,19 @@ class TestAddGroup:
     def return_to_groups_page(self, driver):
         driver.find_element_by_link_text("groups").click()
 
-    def create_group(self, driver, name, header, footer):
+    def create_group(self, driver, group):
         # init group creation
         driver.find_element_by_name("new").click()
         # fill group form
         driver.find_element_by_name("group_name").click()
         driver.find_element_by_name("group_name").clear()
-        driver.find_element_by_name("group_name").send_keys(name)
+        driver.find_element_by_name("group_name").send_keys(group.name)
         driver.find_element_by_name("group_header").click()
         driver.find_element_by_name("group_header").clear()
-        driver.find_element_by_name("group_header").send_keys(header)
+        driver.find_element_by_name("group_header").send_keys(group.header)
         driver.find_element_by_name("group_footer").click()
         driver.find_element_by_name("group_footer").clear()
-        driver.find_element_by_name("group_footer").send_keys(footer)
+        driver.find_element_by_name("group_footer").send_keys(group.footer)
         # submit group creation
         driver.find_element_by_name("submit").click()
 
