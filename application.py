@@ -11,7 +11,7 @@ class Application:
         self.wd.find_element_by_link_text("groups").click()
 
     def create_group(self, group):
-        self.wd.open_groups_page()
+        self.open_groups_page()
         # init group creation
         self.wd.find_element_by_name("new").click()
         # fill group form
@@ -26,7 +26,7 @@ class Application:
         self.wd.find_element_by_name("group_footer").send_keys(group.footer)
         # submit group creation
         self.wd.find_element_by_name("submit").click()
-        self.wd.return_to_groups_page()
+        self.return_to_groups_page()
 
     def create_contact(self, contact):
         # init contact creation
@@ -98,13 +98,15 @@ class Application:
 
         # submit group creation
         self.wd.find_element_by_name("submit").click()
-        self.wd.go_to_homepage()
+        self.go_to_homepage()
 
     def go_to_homepage(self):
         self.wd.find_element_by_xpath(".//a[contains(@href, './')]").click()
 
     def open_groups_page(self):
-        self.wd.find_element_by_link_text("groups").click()
+        self.wd.implicitly_wait(20)
+        self.wd.find_element_by_xpath(".//a[contains(@href, 'group.php')]").click()
+
 
     def login(self, username, password):
         self.wd.find_element_by_name("user").send_keys(username)
