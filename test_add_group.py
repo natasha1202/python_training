@@ -6,30 +6,22 @@ from group import Group
 class TestAddGroup:
 
     def test_add_group(self, driver):
-        self.open_home_page(driver)
         self.login(driver, username="admin", password="secret")
-        self.open_groups_page(driver)
         self.create_group(driver, Group(name="abd", header="abdc", footer="abdce"))
-        self.return_to_groups_page(driver)
         self.logout(driver)
 
     def test_add_empty_group(self, driver):
-        self.open_home_page(driver)
         self.login(driver, username="admin", password="secret")
-        self.open_groups_page(driver)
         self.create_group(driver, Group(name="", header="", footer=""))
-        self.return_to_groups_page(driver)
         self.logout(driver)
 
     def test_add_contact(self, driver):
-        self.open_home_page(driver)
         self.login(driver, username="admin", password="secret")
         self.create_contact(driver, Contact(first_name="aaa", last_name="bbb", mobile="89001111111",
                                              middle_name="", nickname="", title="", company="",
                                             address="", phone="", home="", work="", fax="", email="",
                                             email2="", email3="",homepage=""
                                             ))
-        self.go_to_homepage(driver)
         self.logout(driver)
 
 
@@ -40,6 +32,7 @@ class TestAddGroup:
         driver.find_element_by_link_text("groups").click()
 
     def create_group(self, driver, group):
+        self.open_groups_page(driver)
         # init group creation
         driver.find_element_by_name("new").click()
         # fill group form
@@ -54,6 +47,8 @@ class TestAddGroup:
         driver.find_element_by_name("group_footer").send_keys(group.footer)
         # submit group creation
         driver.find_element_by_name("submit").click()
+
+        self.return_to_groups_page(driver)
 
     def create_contact(self, driver, contact):
         # init contact creation
@@ -127,7 +122,8 @@ class TestAddGroup:
 
         # submit group creation
         driver.find_element_by_name("submit").click()
-        
+
+        self.go_to_homepage(driver)
 
 
     def go_to_homepage(self, driver):
@@ -137,6 +133,7 @@ class TestAddGroup:
         driver.find_element_by_link_text("groups").click()
 
     def login(self, driver, username, password):
+        self.open_home_page(driver)
         driver.find_element_by_name("user").send_keys(username)
         driver.find_element_by_name("pass").click()
         driver.find_element_by_name("pass").send_keys(password)
