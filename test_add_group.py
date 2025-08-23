@@ -1,39 +1,55 @@
 # -*- coding: utf-8 -*-
-from selenium.common.exceptions import NoSuchElementException
-from selenium.common.exceptions import NoAlertPresentException
+from group import Group
 
 
 class TestAddGroup:
 
     def test_add_group(self, driver):
-        driver.get("http://localhost/addressbook/")
-        driver.find_element_by_name("user").send_keys("admin")
-        driver.find_element_by_name("pass").click()
-        driver.find_element_by_name("pass").send_keys("secret")
-        driver.find_element_by_xpath("//input[@value='Login']").click()
-        driver.find_element_by_link_text("groups").click()
-        driver.find_element_by_name("new").click()
-        driver.find_element_by_name("group_name").click()
-        driver.find_element_by_name("group_name").clear()
-        driver.find_element_by_name("group_name").send_keys("abd")
-        driver.find_element_by_name("group_header").click()
-        driver.find_element_by_name("group_header").clear()
-        driver.find_element_by_name("group_header").send_keys("abdc")
-        driver.find_element_by_name("group_footer").click()
-        driver.find_element_by_name("group_footer").clear()
-        driver.find_element_by_name("group_footer").send_keys("abdce")
-        driver.find_element_by_name("submit").click()
-        driver.find_element_by_link_text("groups").click()
+        self.open_home_page(driver)
+        self.login(driver, username="admin", password="secret")
+        self.open_groups_page(driver)
+        self.create_group(driver, Group(name="abd", header="abdc", footer="abdce"))
+        self.return_to_groups_page(driver)
+        self.logout(driver)
+
+    def test_add_empty_group(self, driver):
+        self.open_home_page(driver)
+        self.login(driver, username="admin", password="secret")
+        self.open_groups_page(driver)
+        self.create_group(driver, Group(name="", header="", footer=""))
+        self.return_to_groups_page(driver)
+        self.logout(driver)
+
+    def logout(self, driver):
         driver.find_element_by_link_text("Logout").click()
 
-    @staticmethod
-    def is_element_present(driver, how, what):
-        try: driver.find_element(by=how, value=what)
-        except NoSuchElementException as e: return False
-        return True
+    def return_to_groups_page(self, driver):
+        driver.find_element_by_link_text("groups").click()
 
-    @staticmethod
-    def is_alert_present(driver):
-        try: driver.switch_to_alert()
-        except NoAlertPresentException as e: return False
-        return True
+    def create_group(self, driver, group):
+        # init group creation
+        driver.find_element_by_name("new").click()
+        # fill group form
+        driver.find_element_by_name("group_name").click()
+        driver.find_element_by_name("group_name").clear()
+        driver.find_element_by_name("group_name").send_keys(group.name)
+        driver.find_element_by_name("group_header").click()
+        driver.find_element_by_name("group_header").clear()
+        driver.find_element_by_name("group_header").send_keys(group.header)
+        driver.find_element_by_name("group_footer").click()
+        driver.find_element_by_name("group_footer").clear()
+        driver.find_element_by_name("group_footer").send_keys(group.footer)
+        # submit group creation
+        driver.find_element_by_name("submit").click()
+
+    def open_groups_page(self, driver):
+        driver.find_element_by_link_text("groups").click()
+
+    def login(self, driver, username, password):
+        driver.find_element_by_name("user").send_keys(username)
+        driver.find_element_by_name("pass").click()
+        driver.find_element_by_name("pass").send_keys(password)
+        driver.find_element_by_xpath("//input[@value='Login']").click()
+
+    def open_home_page(self, driver):
+        driver.get("http://localhost/addressbook/")
