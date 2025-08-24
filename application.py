@@ -2,10 +2,21 @@ class Application:
 
     def __init__(self, driver):
         self.wd = driver
-        # self.wd.implicitly_wait(60)
+
+    def login(self, username, password):
+        self.wd.find_element_by_name("user").send_keys(username)
+        self.wd.find_element_by_name("pass").send_keys(password)
+        self.wd.find_element_by_xpath("//input[@value='Login']").click()
 
     def logout(self):
         self.wd.find_element_by_link_text("Logout").click()
+
+    def go_to_homepage(self):
+        self.wd.find_element_by_xpath(".//a[contains(@href, './')]").click()
+
+    def open_groups_page(self):
+        self.wd.implicitly_wait(20)
+        self.wd.find_element_by_xpath(".//a[contains(@href, 'group.php')]").click()
 
     def return_to_groups_page(self):
         self.wd.find_element_by_link_text("groups").click()
@@ -99,18 +110,3 @@ class Application:
         # submit group creation
         self.wd.find_element_by_name("submit").click()
         self.go_to_homepage()
-
-    def go_to_homepage(self):
-        self.wd.find_element_by_xpath(".//a[contains(@href, './')]").click()
-
-    def open_groups_page(self):
-        self.wd.implicitly_wait(20)
-        self.wd.find_element_by_xpath(".//a[contains(@href, 'group.php')]").click()
-
-
-    def login(self, username, password):
-        self.wd.find_element_by_name("user").send_keys(username)
-        self.wd.find_element_by_name("pass").send_keys(password)
-        self.wd.find_element_by_xpath("//input[@value='Login']").click()
-
-
